@@ -6,6 +6,8 @@ public class RequestRegisterUser {
 	
 	private String fullName;
 	
+	private String password;
+	
 	private List<String> roles;
 
 	public String getFullName() {
@@ -24,4 +26,12 @@ public class RequestRegisterUser {
 		this.roles = roles;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 }

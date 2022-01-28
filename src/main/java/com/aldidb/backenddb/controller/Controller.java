@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,14 @@ public class Controller {
 	private OrganizationService organizationService;
 
 	
-	// TODO Create controller for organization
+	// TODO Create controller for user
+	@PostMapping(path = "/login-user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> loginUser(@RequestParam String username,
+			@RequestParam String password) {
+		System.out.println(username +  " " + password );
+		return userService.loginUser(username, password);
+	}
+	
 	@PostMapping(path = "/register-user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> registerUser(@RequestBody RequestRegisterUser request) {
 		return userService.registerUser(request);

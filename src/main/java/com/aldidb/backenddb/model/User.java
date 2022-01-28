@@ -25,6 +25,9 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "name")
 	private String name;
 	
+	@Column
+	private String password;
+	
 	@Column(name= "is_active")
 	private boolean isActive;
 
@@ -51,6 +54,13 @@ public class User extends BaseEntity implements Serializable{
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	
 }

@@ -3,6 +3,7 @@ package com.aldidb.backenddb.service;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class OrganizationService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Value("${security.jwt.token.secret-key}")
+	String secretKey;
+	
 	@Transactional(readOnly = false)
 	public ResponseEntity<Object> createOrganization(RequestCreateOrganization data) {
 		BaseResponse response = new BaseResponse();
@@ -46,6 +50,7 @@ public class OrganizationService {
 		organization.setUser(user);
 		organization = organizationRepository.save(organization);
 		response.setMessage(BaseResponse.SUCCESS);
+		System.out.println("sec "+secretKey);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

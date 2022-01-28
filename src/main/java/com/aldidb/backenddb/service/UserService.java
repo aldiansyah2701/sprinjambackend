@@ -8,6 +8,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +35,25 @@ public class UserService {
 	@Autowired
 	private RoleRepository roleRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	public ResponseEntity<Object> loginUser(String userName, String password) {
+		BaseResponse response = new BaseResponse();
+		try {
+			System.out.println(userName +  " " + password );
+//			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
+			response.setMessage(BaseResponse.SUCCESS);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (AuthenticationException e) {
+			response.setMessage(BaseResponse.FAILED);
+			return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+	}
+
 	@Transactional(readOnly = false)
 	public ResponseEntity<Object> registerUser(RequestRegisterUser data) {
 		BaseResponse response = new BaseResponse();
@@ -40,6 +64,7 @@ public class UserService {
 		}
 		User user = new User();
 		user.setName(data.getFullName());
+		user.setPassword(passwordEncoder.encode(data.getPassword()));
 		user.setCreatedDate(new Date());
 		user.setActive(true);
 		user = userRepository.save(user);
