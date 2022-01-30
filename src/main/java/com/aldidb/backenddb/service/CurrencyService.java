@@ -17,19 +17,19 @@ import com.aldidb.backenddb.repository.CurrencyRepository;
 
 @Service
 public class CurrencyService {
-	
+
 	@Autowired
 	private CurrencyRepository currencyRepository;
-	
+
 	@Transactional(readOnly = false)
-	public ResponseEntity<Object> createCurrency(BaseRequest request){
+	public ResponseEntity<Object> createCurrency(BaseRequest request) {
 		BaseResponse response = new BaseResponse();
 		Currency currency = currencyRepository.findByName(request.getName());
-		if(currency != null) {
+		if (currency != null) {
 			response.setMessage(BaseResponse.ALREADY_EXIST);
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		Currency data = new Currency();
 		data.setActive(true);
 		data.setCreatedDate(new Date());
@@ -38,24 +38,27 @@ public class CurrencyService {
 		response.setMessage(BaseResponse.SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
-	public ResponseEntity<Object> getCurrency(){
+
+	public ResponseEntity<Object> getCurrency() {
 		List<Currency> currencys = (List<Currency>) currencyRepository.findAll();
 		return new ResponseEntity<>(currencys, HttpStatus.OK);
 	}
-	
-	public ResponseEntity<Object> deleteCurrency(String uuid){
+
+	public ResponseEntity<Object> deleteCurrency(String uuid) {
 		BaseResponse response = new BaseResponse();
-		Optional<Currency> currency = currencyRepository.findById(uuid);
-		if(currency.get() == null) {
+		try {
+			Optional<Currency> currency = currencyRepository.findById(uuid);
+			Currency currencyDelete = currency.get();
+			currencyDelete.setActive(false);
+			currencyDelete = currencyRepository.save(currencyDelete);
+			response.setMessage(BaseResponse.SUCCESS);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} catch (Exception e) {
 			response.setMessage(BaseResponse.NOT_FOUND);
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
-		Currency currencyDelete = currency.get();
-		currencyDelete.setActive(false);
-		currencyDelete = currencyRepository.save(currencyDelete);
-		response.setMessage(BaseResponse.SUCCESS);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+
 	}
 
 }

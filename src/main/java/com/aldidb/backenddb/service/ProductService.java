@@ -48,17 +48,20 @@ public class ProductService {
 	public ResponseEntity<Object> deleteProduct(String uuid) {
 		BaseResponse response = new BaseResponse();
 
-		Optional<Product> product = productRepository.findById(uuid);
-		if (product.get() == null) {
+		try {
+			Optional<Product> product = productRepository.findById(uuid);
+			Product productDelete = product.get();
+			productDelete.setActive(false);
+			productDelete = productRepository.save(productDelete);
+			response.setMessage(BaseResponse.SUCCESS);
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} catch (Exception e) {
+
 			response.setMessage(BaseResponse.NOT_FOUND);
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
 		}
-		Product productDelete = product.get();
-		productDelete.setActive(false);
-		productDelete = productRepository.save(productDelete);
-		response.setMessage(BaseResponse.SUCCESS);
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
 }

@@ -3,6 +3,7 @@ package com.aldidb.backenddb.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aldidb.backenddb.message.BaseRequest;
 import com.aldidb.backenddb.message.BaseResponse;
+import com.aldidb.backenddb.message.RequestCreateInvoice;
 import com.aldidb.backenddb.message.RequestCreateOrganization;
 import com.aldidb.backenddb.message.RequestRegisterUser;
 import com.aldidb.backenddb.service.CurrencyService;
+import com.aldidb.backenddb.service.InvoiceService;
 import com.aldidb.backenddb.service.OrganizationService;
 import com.aldidb.backenddb.service.ProductService;
 import com.aldidb.backenddb.service.UserService;
@@ -37,14 +40,18 @@ public class Controller {
 
 	@Autowired
 	private OrganizationService organizationService;
-	
+
 	@Autowired
 	private ProductService productService;
-	
+
 	@Autowired
 	private CurrencyService currencyService;
 
-	// TODO Create controller for user <==============================================================================================================================================>
+	@Autowired
+	private InvoiceService invoiceService;
+
+	// TODO Create controller for user
+	// <==============================================================================================================================================>
 	@PostMapping(path = "/login-user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> loginUser(@RequestParam String username, @RequestParam String password) {
 		return userService.loginUser(username, password);
@@ -79,7 +86,8 @@ public class Controller {
 		return userService.deleteUser(name);
 	}
 
-	// TODO Create controller for organization <==============================================================================================================================================>
+	// TODO Create controller for organization
+	// <==============================================================================================================================================>
 	@PostMapping(path = "/create-organization", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
 	public ResponseEntity<Object> createOrganization(@RequestBody @Valid RequestCreateOrganization request) {
@@ -105,8 +113,7 @@ public class Controller {
 
 	@PutMapping(path = "/update-organization/{uuid}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
-	public ResponseEntity<Object> updateOrganization(
-			@PathVariable("uuid") String uuid,
+	public ResponseEntity<Object> updateOrganization(@PathVariable("uuid") String uuid,
 			@RequestBody @Valid RequestCreateOrganization request) {
 		return organizationService.updateOrganization(uuid, request);
 	}
@@ -116,43 +123,68 @@ public class Controller {
 	public ResponseEntity<Object> deleteOrganization(@PathVariable("uuid") String uuid) {
 		return organizationService.deleteOrganization(uuid);
 	}
-	
-	//TODO Create controller for product <==============================================================================================================================================>
+
+	// TODO Create controller for product
+	// <==============================================================================================================================================>
 	@PostMapping(path = "/create-product", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> createProduct(@RequestBody BaseRequest request) {
 		return productService.createProduct(request);
 	}
-	
+
 	@GetMapping(value = "/get-products")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
 	public ResponseEntity<Object> getProducts() {
 		return productService.getProducts();
 	}
-	
+
 	@DeleteMapping(value = "/delete-product/{uuid}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
 	public ResponseEntity<Object> deleteProduct(@PathVariable("uuid") String uuid) {
 		return productService.deleteProduct(uuid);
 	}
-	
-	//TODO Create controller for currency <==============================================================================================================================================>
+
+	// TODO Create controller for currency
+	// <==============================================================================================================================================>
 	@PostMapping(path = "/create-currency", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> createCurrency(@RequestBody BaseRequest request) {
 		return currencyService.createCurrency(request);
 	}
-	
+
 	@GetMapping(value = "/get-currencys")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
 	public ResponseEntity<Object> getCurrencys() {
 		return currencyService.getCurrency();
 	}
-	
+
 	@DeleteMapping(value = "/delete-currency/{uuid}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
 	public ResponseEntity<Object> deleteCurrency(@PathVariable("uuid") String uuid) {
 		return currencyService.deleteCurrency(uuid);
 	}
-	
-	//TODO Create controller for invoices <==============================================================================================================================================>
-	
+
+	// TODO Create controller for invoices
+	// <==============================================================================================================================================>
+	@PostMapping(path = "/create-invoice", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> createInvoice(@RequestBody RequestCreateInvoice request) {
+		return invoiceService.createInvoice(request);
+	}
+
+	@GetMapping(value = "/get-invoice/{businessKey}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	public ResponseEntity<Object> getInvoice(@PathVariable("businessKey") String businessKey) {
+		return invoiceService.getInvoiceDetail(businessKey);
+	}
+
+	@GetMapping(value = "/get-invoices")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	public ResponseEntity<Object> getInvoices(@RequestParam String userUuid, Pageable pageable) {
+		return invoiceService.getInvoices(userUuid, pageable);
+	}
+
+	@PutMapping(path = "/update-invoice/{businessKey}/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	public ResponseEntity<Object> updateInvoice(@PathVariable("businessKey") String businessKey,
+			@PathVariable("status") String status) {
+		return invoiceService.updateInvoice(businessKey, status);
+	}
 }

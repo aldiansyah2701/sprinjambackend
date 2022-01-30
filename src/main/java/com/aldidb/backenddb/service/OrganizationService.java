@@ -66,17 +66,18 @@ public class OrganizationService {
 
 	public ResponseEntity<Object> updateOrganization(String uuid, RequestCreateOrganization request) {
 		BaseResponse response = new BaseResponse();
-		Optional<Organization> org = organizationRepository.findById(uuid);
-		if (org.get() == null) {
-			response.setMessage(BaseResponse.NOT_FOUND);
+		try {
+			Optional<Organization> org = organizationRepository.findById(uuid);
+			Organization orgUpdate = org.get();
+			orgUpdate.setName(request.getName());
+			orgUpdate.setType(TYPE.valueOf(request.getType()).toString());
+			orgUpdate = organizationRepository.save(orgUpdate);
+			response.setMessage(BaseResponse.SUCCESS);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			response.setMessage(e.getMessage());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
-		Organization orgUpdate = org.get();
-		orgUpdate.setName(request.getName());
-		orgUpdate.setType(TYPE.valueOf(request.getType()).toString());
-		orgUpdate = organizationRepository.save(orgUpdate);
-		response.setMessage(BaseResponse.SUCCESS);
-		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	public ResponseEntity<Object> deleteOrganization(String uuid) {
