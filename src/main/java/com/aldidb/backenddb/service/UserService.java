@@ -16,8 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aldidb.backenddb.kernel.JwtTokenProvider;
 import com.aldidb.backenddb.message.BaseResponse;
 import com.aldidb.backenddb.message.RequestRegisterUser;
+import com.aldidb.backenddb.message.ResponseCreateToken;
 import com.aldidb.backenddb.message.ResponseGetAllUsers;
 import com.aldidb.backenddb.model.Role;
 import com.aldidb.backenddb.model.Role.ROLE;
@@ -37,6 +39,9 @@ public class UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -44,10 +49,10 @@ public class UserService {
 	public ResponseEntity<Object> loginUser(String userName, String password) {
 		BaseResponse response = new BaseResponse();
 		try {
-			System.out.println(userName +  " " + password );
-//			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
-			response.setMessage(BaseResponse.SUCCESS);
-			return new ResponseEntity<>(response, HttpStatus.OK);
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
+			ResponseCreateToken responseJwt = jwtTokenProvider.createToken(userName);
+			responseJwt.setMessage(BaseResponse.SUCCESS);
+			return new ResponseEntity<>(responseJwt, HttpStatus.OK);
 		} catch (AuthenticationException e) {
 			response.setMessage(BaseResponse.FAILED);
 			return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
