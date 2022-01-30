@@ -24,6 +24,9 @@ public class Product extends BaseEntity implements Serializable{
 	
 	@Column
 	private String name;
+	
+	@Column(name= "is_active")
+	private boolean isActive;
 
 	public String getUuid() {
 		return uuid;
@@ -39,6 +42,14 @@ public class Product extends BaseEntity implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 	
 	

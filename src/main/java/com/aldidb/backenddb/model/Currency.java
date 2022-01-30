@@ -10,11 +10,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import lombok.Data;
-
 @Entity(name ="currency")
 @Table(name="currency")
-@Data
 public class Currency extends BaseEntity implements Serializable{
 	
 	private static final long serialVersionUID = 4211854570169058068L;
@@ -27,5 +24,32 @@ public class Currency extends BaseEntity implements Serializable{
 	
 	@Column
 	private String name;
+	
+	@Column(name= "is_active")
+	private boolean isActive;
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 
 }

@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aldidb.backenddb.message.BaseRequest;
 import com.aldidb.backenddb.message.BaseResponse;
 import com.aldidb.backenddb.message.RequestCreateOrganization;
 import com.aldidb.backenddb.message.RequestRegisterUser;
+import com.aldidb.backenddb.service.CurrencyService;
 import com.aldidb.backenddb.service.OrganizationService;
+import com.aldidb.backenddb.service.ProductService;
 import com.aldidb.backenddb.service.UserService;
 
 @RestController
@@ -34,6 +37,12 @@ public class Controller {
 
 	@Autowired
 	private OrganizationService organizationService;
+	
+	@Autowired
+	private ProductService productService;
+	
+	@Autowired
+	private CurrencyService currencyService;
 
 	// TODO Create controller for user <==============================================================================================================================================>
 	@PostMapping(path = "/login-user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -107,5 +116,43 @@ public class Controller {
 	public ResponseEntity<Object> deleteOrganization(@PathVariable("uuid") String uuid) {
 		return organizationService.deleteOrganization(uuid);
 	}
+	
+	//TODO Create controller for product <==============================================================================================================================================>
+	@PostMapping(path = "/create-product", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> createProduct(@RequestBody BaseRequest request) {
+		return productService.createProduct(request);
+	}
+	
+	@GetMapping(value = "/get-products")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	public ResponseEntity<Object> getProducts() {
+		return productService.getProducts();
+	}
+	
+	@DeleteMapping(value = "/delete-product/{uuid}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	public ResponseEntity<Object> deleteProduct(@PathVariable("uuid") String uuid) {
+		return productService.deleteProduct(uuid);
+	}
+	
+	//TODO Create controller for currency <==============================================================================================================================================>
+	@PostMapping(path = "/create-currency", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> createCurrency(@RequestBody BaseRequest request) {
+		return currencyService.createCurrency(request);
+	}
+	
+	@GetMapping(value = "/get-currencys")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	public ResponseEntity<Object> getCurrencys() {
+		return currencyService.getCurrency();
+	}
+	
+	@DeleteMapping(value = "/delete-currency/{uuid}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	public ResponseEntity<Object> deleteCurrency(@PathVariable("uuid") String uuid) {
+		return currencyService.deleteCurrency(uuid);
+	}
+	
+	//TODO Create controller for invoices <==============================================================================================================================================>
 	
 }

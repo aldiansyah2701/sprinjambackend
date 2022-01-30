@@ -3,12 +3,9 @@ package com.aldidb.backenddb.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.aldidb.backenddb.model.Product;
-
+import com.aldidb.backenddb.model.Invoice;
 
 @Repository
-public interface ProductRepository extends CrudRepository<Product, String>{
-	
-	Product findByName(String name);
+public interface InvoiceRepository extends CrudRepository<Invoice, String> {
 
 }
