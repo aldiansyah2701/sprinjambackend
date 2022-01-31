@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ControllerAdvice
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
-
+	// TODO exception handle for authentication
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
