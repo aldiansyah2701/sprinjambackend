@@ -41,13 +41,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 		httpServletResponse.getWriter().write(convertObjectToJson(baseResponse));
 	}
 
-	@ExceptionHandler(Exception.class)
-	public void handleException(HttpServletResponse res) throws IOException {
-		BaseResponse baseResponse = new BaseResponse();
-		System.out.println(convertObjectToJson(res));
-		res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
-	}
-
 	public String convertObjectToJson(Object object) throws JsonProcessingException {
 		if (object == null) {
 			return null;
