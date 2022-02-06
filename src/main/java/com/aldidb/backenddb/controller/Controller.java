@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aldidb.backenddb.exception.CustomGenericException;
 import com.aldidb.backenddb.message.BaseRequest;
 import com.aldidb.backenddb.message.BaseResponse;
 import com.aldidb.backenddb.message.RequestCreateInvoice;
@@ -120,19 +122,22 @@ public class Controller {
 
 	@DeleteMapping(value = "/delete-organization/{uuid}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	@ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
 	public ResponseEntity<Object> deleteOrganization(@PathVariable("uuid") String uuid) {
+		
 		return organizationService.deleteOrganization(uuid);
 	}
 
 	// TODO Create controller for product
 	// <==============================================================================================================================================>
 	@PostMapping(path = "/create-product", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
 	public ResponseEntity<Object> createProduct(@RequestBody BaseRequest request) {
 		return productService.createProduct(request);
 	}
 
 	@GetMapping(value = "/get-products")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR') or hasAuthority('ROLE_CUSTOMERSERVICE')")
 	public ResponseEntity<Object> getProducts() {
 		return productService.getProducts();
 	}
@@ -146,12 +151,13 @@ public class Controller {
 	// TODO Create controller for currency
 	// <==============================================================================================================================================>
 	@PostMapping(path = "/create-currency", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
 	public ResponseEntity<Object> createCurrency(@RequestBody BaseRequest request) {
 		return currencyService.createCurrency(request);
 	}
 
 	@GetMapping(value = "/get-currencys")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR') or hasAuthority('ROLE_CUSTOMERSERVICE')")
 	public ResponseEntity<Object> getCurrencys() {
 		return currencyService.getCurrency();
 	}
@@ -165,18 +171,19 @@ public class Controller {
 	// TODO Create controller for invoices
 	// <==============================================================================================================================================>
 	@PostMapping(path = "/create-invoice", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR') or hasAuthority('ROLE_CUSTOMERSERVICE')")
 	public ResponseEntity<Object> createInvoice(@RequestBody RequestCreateInvoice request) {
 		return invoiceService.createInvoice(request);
 	}
 
 	@GetMapping(value = "/get-invoice/{businessKey}")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR') or hasAuthority('ROLE_CUSTOMERSERVICE')")
 	public ResponseEntity<Object> getInvoice(@PathVariable("businessKey") String businessKey) {
 		return invoiceService.getInvoiceDetail(businessKey);
 	}
 
 	@GetMapping(value = "/get-invoices")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR') or hasAuthority('ROLE_CUSTOMERSERVICE')")
 	public ResponseEntity<Object> getInvoices(@RequestParam String userUuid, Pageable pageable) {
 		return invoiceService.getInvoices(userUuid, pageable);
 	}

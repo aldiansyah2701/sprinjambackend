@@ -21,7 +21,7 @@ public class Invoice extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = 4211854570169058068L;
 	
 	public enum STATUS{
-		PENDING, APPROVED, REJECTED
+		PENDING, APPROVED, REJECTED, EXPIRED
 	}
 	
 	@Id

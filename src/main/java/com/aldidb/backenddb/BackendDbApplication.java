@@ -1,9 +1,14 @@
 package com.aldidb.backenddb;
 
+import java.util.concurrent.Executor;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 //import springfox.documentation.builders.RequestHandlerSelectors;
 //import springfox.documentation.spi.DocumentationType;
@@ -12,10 +17,23 @@ import org.springframework.context.annotation.Bean;
 
 //@EnableSwagger2
 @SpringBootApplication
+@EnableAsync
+@EnableScheduling
 public class BackendDbApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendDbApplication.class, args);
+	}
+	
+	@Bean(name = "transactionPoolExecutor")
+	public Executor getAsyncExecutor() {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(7);
+		executor.setMaxPoolSize(42);
+		executor.setQueueCapacity(11);
+		executor.setThreadNamePrefix("transactionPoolExecutor-");
+		executor.initialize();
+		return executor;
 	}
 
 //	@Bean

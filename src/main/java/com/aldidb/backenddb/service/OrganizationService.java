@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aldidb.backenddb.exception.CustomGenericException;
 import com.aldidb.backenddb.message.BaseResponse;
 import com.aldidb.backenddb.message.RequestCreateOrganization;
 import com.aldidb.backenddb.model.Organization;
@@ -87,8 +88,7 @@ public class OrganizationService {
 			response.setMessage(BaseResponse.SUCCESS);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			response.setMessage(e.getMessage());
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+			 throw new CustomGenericException("120", HttpStatus.INTERNAL_SERVER_ERROR.value(),"Data not exist");
 		}
 	}
 }
