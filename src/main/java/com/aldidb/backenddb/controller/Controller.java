@@ -33,8 +33,11 @@ import com.aldidb.backenddb.service.OrganizationService;
 import com.aldidb.backenddb.service.ProductService;
 import com.aldidb.backenddb.service.UserService;
 
+import io.swagger.annotations.Api;
+
 @RestController
 @RequestMapping("/api/v1")
+@Api(tags = "API")
 public class Controller {
 
 	@Autowired
