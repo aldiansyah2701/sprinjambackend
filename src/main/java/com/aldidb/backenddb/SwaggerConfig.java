@@ -50,7 +50,7 @@ public class SwaggerConfig {
 	        .title("INVOICE API")//
 	        .description("api for invoice process")//
 	        .version("1.0.0")//
-	        .license("aldi License").licenseUrl("http://aldiansyah")//
+	        .license("aldi group License").licenseUrl("http://aldiansyah")//
 	        .contact(new Contact(null, null, "aldiansyahxramadlan@gmail.com"))//
 	        .build();
 	  }
