@@ -8,6 +8,6 @@ public interface ModelUserAndRoles {
 
 	String getUuid();
 	
-	int getActive();
+	boolean getActive();
 
 }
