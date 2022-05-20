@@ -1,7 +1,9 @@
 package com.aldidb.backenddb.exception;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,7 +51,11 @@ public class CustomErrorHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> handleCustomException(CustomGenericException ex, HttpServletRequest request) {
 		BaseResponse response = new BaseResponse();
 		response.setMessage(ex.getMessage());
-		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		Map<String, Object> resEx = new HashMap<String, Object>();
+		resEx.put("status", ex.getStatus());
+		resEx.put("errorNumber", ex.getError());
+		resEx.put("message", ex.getMessage());
+		return new ResponseEntity<>(resEx, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 

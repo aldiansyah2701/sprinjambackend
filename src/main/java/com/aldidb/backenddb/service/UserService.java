@@ -120,7 +120,7 @@ public class UserService {
 			ResponseGetAllUsers resp = new ResponseGetAllUsers();
 			resp.setName(data.getName());
 //			resp.setActive(data.getActive() != 0 ? true : false);
-			resp.setActive(Boolean.valueOf(data.getActive()));
+//			resp.setActive(Boolean.valueOf(data.getActive()));
 			resp.setUuid(data.getUuid());
 			resp.setRoles(Arrays.asList(data.getRoles().split(";")));
 			response.add(resp);
@@ -135,7 +135,7 @@ public class UserService {
 		ResponseGetAllUsers resp = new ResponseGetAllUsers();
 		resp.setName(data.getName());
 //		resp.setActive(data.getActive() != 0 ? true : false);
-		resp.setActive(Boolean.valueOf(data.getActive()));
+//		resp.setActive(Boolean.valueOf(data.getActive()));
 		resp.setUuid(data.getUuid());
 		resp.setRoles(Arrays.asList(data.getRoles().split(";")));
 

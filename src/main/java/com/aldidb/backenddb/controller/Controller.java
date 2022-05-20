@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,7 @@ import com.aldidb.backenddb.message.RequestCreateInvoice;
 import com.aldidb.backenddb.message.RequestCreateOrganization;
 import com.aldidb.backenddb.message.RequestRegisterUser;
 import com.aldidb.backenddb.service.CurrencyService;
+import com.aldidb.backenddb.service.ExternalService;
 import com.aldidb.backenddb.service.InvoiceService;
 import com.aldidb.backenddb.service.OrganizationService;
 import com.aldidb.backenddb.service.ProductService;
@@ -54,6 +56,9 @@ public class Controller {
 
 	@Autowired
 	private InvoiceService invoiceService;
+
+	@Autowired
+	private ExternalService externalService;
 
 	// TODO Create controller for user
 	// <==============================================================================================================================================>
@@ -127,7 +132,7 @@ public class Controller {
 	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_SUPERVISOR')")
 	@ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
 	public ResponseEntity<Object> deleteOrganization(@PathVariable("uuid") String uuid) {
-		
+
 		return organizationService.deleteOrganization(uuid);
 	}
 
@@ -197,4 +202,13 @@ public class Controller {
 			@PathVariable("status") String status) {
 		return invoiceService.updateInvoice(businessKey, status);
 	}
+
+	// TODO Create controller for raja ongkir
+	// <==============================================================================================================================================>
+	@GetMapping(value = "/get-rajaongkir-province-all")
+	public ResponseEntity<Object> getProvince(
+			@RequestHeader(value = "key", required = false) String key) {
+		return externalService.getAllProvince(key);
+	}
+
 }
